@@ -36,6 +36,15 @@ def profile(request, user_id):
    follower = Follow.objects.filter(user=user)
    followed = Follow.objects.filter(user_followed=user)
 
+   try:
+      checkFollow = followed.filter(user=User.objects.get(pk=request.user.id))
+      if len(checkFollow) != 0:
+         isFollowing = True
+      else:
+         isFollowing = False
+   except:
+      isFollowing = False
+
    # pagination
    paginator = Paginator(allPosts, 10)
    pageNumber = request.GET.get('page')
@@ -46,8 +55,28 @@ def profile(request, user_id):
       "postsOfPage": postsOfPage,
       "username": user.username,
       "follower": follower,
-      "followed": followed
+      "followed": followed,
+      "isFollowing": isFollowing,
+      "user_profile": user
    })
+
+def follow(request):
+   userFollow = request.POST['userFollow']
+   currentUser = User.objects.get(pk=request.user.id)
+   userFollowData = User.objects.get(username=userFollow)
+   f = Follow(user=currentUser, user_followed=userFollowData)
+   f.save()
+   user_id = userFollowData.id
+   return HttpResponseRedirect(reverse(profile, kwargs={'user_id': user_id}))
+
+def unfollow(request):
+   userFollow = request.POST['userFollow']
+   currentUser = User.objects.get(pk=request.user.id)
+   userFollowData = User.objects.get(username=userFollow)
+   f = Follow.objects.get(user=currentUser, user_followed=userFollowData)
+   f.delete()
+   user_id = userFollowData.id
+   return HttpResponseRedirect(reverse(profile, kwargs={'user_id': user_id}))
 
 def login_view(request):
    if request.method == "POST":

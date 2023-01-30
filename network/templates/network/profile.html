@@ -1,12 +1,29 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-   <h1>Welcome, {{ username }}</h1>
+   <h1>{{ username }}'s Profile</h1>
 
    <div class="container">
       <div class="row d-flex justify-content-center">
          <h3 class="col-4">Followers: {{ followed.count }}</h3>
          <h3 class="col-4">Following: {{ follower.count }}</h3>
+         {% if user.is_authenticated %}
+            {% if user != user_profile %}
+               {% if isFollowing %}
+                  <form action="{% url 'unfollow' %}" method="POST">
+                     {% csrf_token %}
+                     <input type="hidden" name="userFollow" value="{{ user_profile }}">
+                     <input type="submit" value="Unfolllow" class="btn btn-danger">
+                  </form>
+               {% else %}
+                  <form action="{% url 'follow' %}" method="POST">
+                     {% csrf_token %}
+                     <input type="hidden" name="userFollow" value="{{ user_profile }}">
+                     <input type="submit" value="Folllow" class="btn btn-warning">
+                  </form>
+               {% endif %}
+            {% endif %}
+         {% endif %}
       </div>
    </div>
    
