@@ -17,7 +17,7 @@
    <div class="posts-display">
       {% for post in postsOfPage %}
          <div class="social-post">
-            <p class="username"><em>Posted by... <strong>{{ post.user }}</strong></em></p>
+            <p class="username"><em>Posted by... <strong><a href="{% url 'profile' user_id=post.user.id %}">{{ post.user }}</a></strong></em></p>
             <h4 class="post-content">{{ post.content }}</h4>
             <p class="post-date">{{ post.date }}</p>
          </div>
