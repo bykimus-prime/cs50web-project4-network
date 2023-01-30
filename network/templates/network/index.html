@@ -13,4 +13,9 @@
          </form>
       </div>
    {% endif %}
+   <div class="all-posts">
+      {% for post in allPosts %}
+         <h3>{{ post.content }}</h3>
+      {% endfor %}
+   </div>
 {% endblock %}
