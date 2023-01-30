@@ -15,7 +15,11 @@
    {% endif %}
    <div class="all-posts">
       {% for post in allPosts %}
-         <h3>{{ post.content }}</h3>
+         <div class="social-post">
+            <p class="username"><em>Posted by... <strong>{{ post.user }}</strong></em></p>
+            <h4 class="post-content">{{ post.content }}</h4>
+            <p class="post-date">{{ post.date }}</p>
+         </div>
       {% endfor %}
    </div>
 {% endblock %}
