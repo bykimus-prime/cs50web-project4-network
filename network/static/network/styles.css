@@ -17,4 +17,18 @@
    border: 1px solid grey;
    margin-bottom: 10px;
    max-width: 700px;
+   padding-left: 6px;
+}
+
+.username {
+   margin: 4px 0 6px;
+}
+
+.post-content {
+   font-size: 22px;
+}
+
+.post-date {
+   margin-bottom: 6px;
+   color: grey;
 }
