@@ -3,9 +3,9 @@
 {% block body %}
    <h1>All Posts</h1>
    {% if user.is_authenticated %}
-      <div class="new-post my-3 mx-5">
+      <div class="new-post">
          <h2>New Post</h2>
-         <form action="" method="POST">
+         <form action="{% url 'new_post' %}" method="POST">
             {% csrf_token %}
             <textarea name="content" row="4" cols="100"></textarea>
             <br/>
