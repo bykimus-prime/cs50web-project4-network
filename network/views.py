@@ -29,6 +29,21 @@ def new_post(request):
       post.save()
       return HttpResponseRedirect(reverse(index))
 
+def profile(request, user_id):
+   user = User.objects.get(pk=user_id)
+   allPosts = Post.objects.filter(user=user).order_by("id").reverse()  # show only user's posts
+
+   # pagination
+   paginator = Paginator(allPosts, 10)
+   pageNumber = request.GET.get('page')
+   postsOfPage = paginator.get_page(pageNumber)
+
+   return render(request, "network/profile.html", {
+      "allPosts": allPosts,
+      "postsOfPage": postsOfPage,
+      "username": user.username
+   })
+
 def login_view(request):
    if request.method == "POST":
 
