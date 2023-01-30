@@ -20,6 +20,14 @@
             <p class="username"><em>Posted by... <strong><a href="{% url 'profile' user_id=post.user.id %}">{{ post.user }}</a></strong></em></p>
             <h4 class="post-content">{{ post.content }}</h4>
             <p class="post-date">{{ post.date }}</p>
+            {% if user.is_authenticated %}
+            {% comment %} check if user is the owner of the post {% endcomment %}
+               {% if user == post.user %}
+                  <div class="">
+                     <button class="btn btn-primary">Edit</button>
+                  </div>
+               {% endif %}
+            {% endif %}
          </div>
       {% endfor %}
    </div>
