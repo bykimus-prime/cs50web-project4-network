@@ -60,6 +60,28 @@ def profile(request, user_id):
       "user_profile": user
    })
 
+def following(request):
+   currentUser = User.objects.get(pk=request.user.id) # gets all data about that particular user
+   followingPeople = Follow.objects.filter(user=currentUser) # get all people that this user follows
+   allPosts = Post.objects.all().order_by('id').reverse() # get all posts available
+   
+   followingPosts = [] # display posts only for people user is following
+
+   for post in allPosts:
+      for person in followingPeople:
+         if person.user_followed == post.user:
+            followingPosts.append(post)
+
+   # pagination
+   # input is allPosts, shows 10 posts at a time
+   paginator = Paginator(followingPosts, 10)
+   pageNumber = request.GET.get('page')  # page number to show on index
+   postsOfPage = paginator.get_page(pageNumber)  # display posts by pages
+
+   return render(request, "network/following.html", {
+      "postsOfPage": postsOfPage
+   })
+
 def follow(request):
    userFollow = request.POST['userFollow']
    currentUser = User.objects.get(pk=request.user.id)
