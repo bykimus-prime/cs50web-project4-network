@@ -24,7 +24,26 @@
             {% comment %} check if user is the owner of the post {% endcomment %}
                {% if user == post.user %}
                   <div class="">
-                     <button class="btn btn-primary">Edit</button>
+                     <button class="btn btn-primary" data-toggle="modal" data-target="#modal_edit_post_{{ post.id }}">Edit</button>
+                  </div>
+                  <div class="modal" id="modal_edit_post_{{ post.id }}" tabindex="-1" role="dialog" aria-labelledby="modal_edit_post_{{ post.id }}_label" aria-hidden="true">
+                     <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                           <div class="modal-header">
+                              <h5 class="modal-title">Edit Post</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                 <span aria-hidden="true">&times;</span>
+                              </button>
+                           </div>
+                           <div class="modal-body">
+                              <textarea rows="10" id="textarea_{{ post.id }}" class="form-control" name="content">{{ post.content }}</textarea>
+                           </div>
+                           <div class="modal-footer">
+                              <button type="button" class="btn btn-primary">Save changes</button>
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                           </div>
+                        </div>
+                     </div>
                   </div>
                {% endif %}
             {% endif %}
