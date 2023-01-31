@@ -1,9 +1,10 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.core.paginator import Paginator
+import json
 
 from .models import User, Post, Follow
 
@@ -20,6 +21,14 @@ def index(request):
       "allPosts": allPosts,
       "postsOfPage": postsOfPage
    })
+
+def edit(request, post_id):
+   if request.method == "POST": # check if we're receiving a post method
+      data = json.loads(request.body) # get data from javascript
+      edit_post = Post.objects.get(pk=post_id) # get data from particular post
+      edit_post.content = data["content"] # change content of this post
+      edit_post.save()
+      return JsonResponse({"message": "Change successful", "data": data["content"]}) # return a json response to our frontend again
 
 def new_post(request):
    if request.method == "POST":

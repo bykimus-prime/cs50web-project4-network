@@ -1,6 +1,31 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
+   <script>
+      function getCookie(name) {
+         const value = `; ${document.cookie}`; // get cookie
+         const parts = value.split(`; ${name}=`);
+         if (parts.length == 2) return parts.pop().split(';').shift();
+      }
+
+      function submitHandler(id) {
+         const textareaValue = document.getElementById(`textarea_${id}`).value
+         // fetch call to edit function
+         fetch(`/edit/${id}`, { // send id of our post
+            // send things
+            method: "POST",
+            headers: {"Content-type": "application/json", "X-CSRFToken": getCookie("csrftoken")},
+            body: JSON.stringify({ // need to convert data in javascript to python
+               content: textareaValue
+            })
+         })
+         .then(response => response.json())
+         .then(result =>
+            console.log(result)
+         )
+      }
+   </script>
+
    <h1>All Posts</h1>
    {% if user.is_authenticated %}
       <div class="new-post">
@@ -36,10 +61,10 @@
                               </button>
                            </div>
                            <div class="modal-body">
-                              <textarea rows="10" id="textarea_{{ post.id }}" class="form-control" name="content">{{ post.content }}</textarea>
+                              <textarea rows="6" id="textarea_{{ post.id }}" class="form-control" name="content">{{ post.content }}</textarea>
                            </div>
                            <div class="modal-footer">
-                              <button type="button" class="btn btn-primary">Save changes</button>
+                              <button type="button" class="btn btn-primary" onclick="submitHandler({{ post.id }})">Save changes</button>
                               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                            </div>
                         </div>
