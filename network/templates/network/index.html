@@ -9,7 +9,9 @@
       }
 
       function submitHandler(id) {
-         const textareaValue = document.getElementById(`textarea_${id}`).value
+         const textareaValue = document.getElementById(`textarea_${id}`).value;
+         const content = document.getElementById(`content_${id}`);
+         const modal = document.getElementById(`modal_edit_post_${id}`);
          // fetch call to edit function
          fetch(`/edit/${id}`, { // send id of our post
             // send things
@@ -20,9 +22,7 @@
             })
          })
          .then(response => response.json())
-         .then(result =>
-            console.log(result)
-         )
+         .then(result => content.innerHTML = result.data)
       }
    </script>
 
@@ -43,7 +43,7 @@
       {% for post in postsOfPage %}
          <div class="social-post">
             <p class="username"><em>Posted by... <strong><a href="{% url 'profile' user_id=post.user.id %}">{{ post.user }}</a></strong></em></p>
-            <h4 class="post-content">{{ post.content }}</h4>
+            <h4 class="post-content" id="content_{{ post.id }}">{{ post.content }}</h4>
             <p class="post-date">{{ post.date }}</p>
             {% if user.is_authenticated %}
             {% comment %} check if user is the owner of the post {% endcomment %}
@@ -64,7 +64,7 @@
                               <textarea rows="6" id="textarea_{{ post.id }}" class="form-control" name="content">{{ post.content }}</textarea>
                            </div>
                            <div class="modal-footer">
-                              <button type="button" class="btn btn-primary" onclick="submitHandler({{ post.id }})">Save changes</button>
+                              <button type="button" class="btn btn-primary" onclick="submitHandler({{ post.id }})" data-dismiss="modal">Save changes</button>
                               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                            </div>
                         </div>
