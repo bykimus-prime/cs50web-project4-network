@@ -1,6 +1,37 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
+   <script>
+      function likeHandler(id, whoYouLiked) {
+         const btn = document.getElementById(`${id}`);
+
+         btn.classList.remove("fa-thumbs-up");
+         btn.classList.remove("fa-thumbs-down");
+
+         // see if post is already liked
+         if (whoYouLiked.indexOf(id) >= 0) {
+            var liked = true;
+         } else {
+            var liked = false;
+         }
+
+         if (liked === true) {
+            fetch(`/remove_like/${id}`)
+            .then(response => response.json)
+            .then(result => {
+               btn.classList.add("fa-thumbs-up")
+            })
+         } else {
+            fetch(`/add_like/${id}`)
+            .then(response => response.json)
+            .then(result => {
+               btn.classList.add("fa-thumbs-down")
+            })
+         }
+         liked = !liked
+      }
+   </script>
+
    <h1>People you follow posted:</h1>
 
    <div class="posts-display">
@@ -9,6 +40,16 @@
             <p class="username"><em>Posted by... <strong><a href="{% url 'profile' user_id=post.user.id %}">{{ post.user }}</a></strong></em></p>
             <h4 class="post-content">{{ post.content }}</h4>
             <p class="post-date">{{ post.date }}</p>
+            {% if user.is_authenticated %}
+            <!-- check if user is the owner of the post -->
+               {% if post.id in whoYouLiked %}
+                  <!-- post already liked by the user -->
+                  <button class="btn btn-info fa fa-thumbs-down col-1" id="{{ post.id }}" onclick="likeHandler({{ post.id }}, {{ whoYouLiked }})"></button>
+               {% else %}
+                  <!-- post not yet liked -->
+                  <button class="btn btn-info fa fa-thumbs-up col-1" id="{{ post.id }}" onclick="likeHandler({{ post.id }}, {{ whoYouLiked }})"></button>
+               {% endif %}
+            {% endif %}
          </div>
       {% endfor %}
    </div>

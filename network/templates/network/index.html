@@ -24,6 +24,35 @@
          .then(response => response.json())
          .then(result => content.innerHTML = result.data)
       }
+
+      function likeHandler(id, whoYouLiked) {
+         const btn = document.getElementById(`${id}`);
+
+         btn.classList.remove("fa-thumbs-up");
+         btn.classList.remove("fa-thumbs-down");
+
+         // see if post is already liked
+         if (whoYouLiked.indexOf(id) >= 0) {
+            var liked = true;
+         } else {
+            var liked = false;
+         }
+
+         if (liked === true) {
+            fetch(`/remove_like/${id}`)
+            .then(response => response.json)
+            .then(result => {
+               btn.classList.add("fa-thumbs-up")
+            })
+         } else {
+            fetch(`/add_like/${id}`)
+            .then(response => response.json)
+            .then(result => {
+               btn.classList.add("fa-thumbs-down")
+            })
+         }
+         liked = !liked
+      }
    </script>
 
    <h1>All Posts</h1>
@@ -73,10 +102,10 @@
                {% else %}
                   {% if post.id in whoYouLiked %}
                   <!-- post already liked by the user -->
-                  <button class="btn btn-info fa fa-thumbs-down col-1" id="{{ post.id }}"></button>
+                  <button class="btn btn-info fa fa-thumbs-down col-1" id="{{ post.id }}" onclick="likeHandler({{ post.id }}, {{ whoYouLiked }})"></button>
                   {% else %}
                   <!-- post not yet liked -->
-                  <button class="btn btn-info fa fa-thumbs-up col-1" id="{{ post.id }}"></button>
+                  <button class="btn btn-info fa fa-thumbs-up col-1" id="{{ post.id }}" onclick="likeHandler({{ post.id }}, {{ whoYouLiked }})"></button>
                   {% endif %}
                {% endif %}
             {% endif %}
