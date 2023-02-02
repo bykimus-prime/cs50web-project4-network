@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.core.paginator import Paginator
 import json
 
-from .models import User, Post, Follow
+from .models import User, Post, Follow, Like
 
 
 def index(request):
@@ -17,9 +17,22 @@ def index(request):
    pageNumber = request.GET.get('page') # page number to show on index
    postsOfPage = paginator.get_page(pageNumber) # display posts by pages
 
+   # get all likes
+   allLikes = Like.objects.all()
+   # get all posts that user liked
+   whoYouLiked = []
+   # if user is not signed in, return empty list
+   try:
+      for like in allLikes:
+         if like.user.id == request.user.id:
+            whoYouLiked.append(like.post.id)
+   except:
+      whoYouLiked = []
+
    return render(request, "network/index.html", {
       "allPosts": allPosts,
-      "postsOfPage": postsOfPage
+      "postsOfPage": postsOfPage,
+      "whoYouLiked": whoYouLiked
    })
 
 def edit(request, post_id):

@@ -46,7 +46,7 @@
             <h4 class="post-content" id="content_{{ post.id }}">{{ post.content }}</h4>
             <p class="post-date">{{ post.date }}</p>
             {% if user.is_authenticated %}
-            {% comment %} check if user is the owner of the post {% endcomment %}
+            <!-- check if user is the owner of the post -->
                {% if user == post.user %}
                   <div class="">
                      <button class="btn btn-primary" data-toggle="modal" data-target="#modal_edit_post_{{ post.id }}">Edit</button>
@@ -70,6 +70,14 @@
                         </div>
                      </div>
                   </div>
+               {% else %}
+                  {% if post.id in whoYouLiked %}
+                  <!-- post already liked by the user -->
+                  <button class="btn btn-info fa fa-thumbs-down col-1" id="{{ post.id }}"></button>
+                  {% else %}
+                  <!-- post not yet liked -->
+                  <button class="btn btn-info fa fa-thumbs-up col-1" id="{{ post.id }}"></button>
+                  {% endif %}
                {% endif %}
             {% endif %}
          </div>
